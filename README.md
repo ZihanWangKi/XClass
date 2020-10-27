@@ -16,7 +16,7 @@ Our method X-Class, breaks up this task into three modules
     - We further select the confident document-class pairs from the previous step, and train a supervised text classifier
     (e.g. BERT) above it.
 This pipeline also illustrates our method.
-<p align="center"><img width="100%" src="img/pipeline.jpg"/></p>
+<p align="center"><img width="100%" src="img/pipeline.pdf"/></p>
 
 ## Datasets
 

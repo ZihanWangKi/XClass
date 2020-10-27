@@ -16,7 +16,7 @@ Our method X-Class, breaks up this task into three modules
     - We further select the confident document-class pairs from the previous step, and train a supervised text classifier
     (e.g. BERT) above it.
 This pipeline also illustrates our method.
-<p align="center"><img width="100%" src="img/pipeline.pdf"/></p>
+<p align="center"><img width="100%" src="img/pipeline.png"/></p>
 
 ## Datasets
 
@@ -48,7 +48,7 @@ specific dataset's folder.
 
 ## Scripts
 #### Environment
-We used python=3.6, torch-1.4.0, cudatoolkit=10.0. We believe that other versions should also work.
+We used python=3.6, torch-1.4.0, cudatoolkit=10.0. 
 Other packages can be installed via `pip install -r requirements.txt`.
 
 #### Reproduce
@@ -65,7 +65,7 @@ Our method can be easily applied to new datasets, to do that:
 
 #### Intermediate Data
 All our intermediate data are stored in `data/intermediate_data/DATASET_NAME/`, it contains information such as
-document representations, clusters, and etc. 
+document representations, clusters, etc. 
 
 ## Citation
 Please cite the following paper if you found our dataset or framework useful. Thanks!

@@ -15,7 +15,8 @@ from sklearn.mixture import GaussianMixture
 from sklearn.mixture._gaussian_mixture import _estimate_gaussian_parameters
 from sklearn.preprocessing import normalize
 from tqdm import tqdm
-from utils import (CLUSTER_FOLDER_PATH, cosine_similarity_embedding,
+
+from utils import (INTERMEDIATE_DATA_FOLDER_PATH, cosine_similarity_embedding,
                    cosine_similarity_embeddings, evaluate_predictions,
                    most_common, pairwise_distances)
 
@@ -41,7 +42,7 @@ def main(dataset_name,
     naming_suffix = f"pca{pca}.clus{cluster_method}.{lm_type}.{document_repr_type}.{random_state}"
     print(naming_suffix)
 
-    data_dir = os.path.join(CLUSTER_FOLDER_PATH, dataset_name)
+    data_dir = os.path.join(INTERMEDIATE_DATA_FOLDER_PATH, dataset_name)
     print(data_dir)
 
     with open(os.path.join(data_dir, "dataset.pk"), "rb") as f:

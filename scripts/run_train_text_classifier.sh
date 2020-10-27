@@ -23,5 +23,4 @@ CUDA_VISIBLE_DEVICES=$GPU python train_text_classifier.py \
   --per_gpu_train_batch_size 16 \
   --per_gpu_eval_batch_size 16 \
   --logging_steps 300 \
-  --save_steps -1
-
+  --save_steps -1 

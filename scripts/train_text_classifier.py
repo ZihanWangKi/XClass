@@ -33,15 +33,15 @@ from torch.utils.data import (DataLoader, RandomSampler, SequentialSampler,
 from torch.utils.data.distributed import DistributedSampler
 from tqdm import tqdm, trange
 from transformers import (WEIGHTS_NAME, AdamW, AutoConfig,
-                          BertForSequenceClassification, AutoTokenizer,
-                          DataProcessor, InputExample,
-                          get_linear_schedule_with_warmup, BertModel, BertPreTrainedModel,
-                          AutoModelForSequenceClassification)
+                          AutoModelForSequenceClassification, AutoTokenizer,
+                          BertForSequenceClassification, BertModel,
+                          BertPreTrainedModel, DataProcessor, InputExample,
+                          get_linear_schedule_with_warmup)
 from transformers import \
     glue_convert_examples_to_features as convert_examples_to_features
 
-from utils import DATA_FOLDER_PATH
 from preprocessing_utils import load_classnames, load_labels, load_text
+from utils import DATA_FOLDER_PATH
 
 
 class DProcessor(DataProcessor):

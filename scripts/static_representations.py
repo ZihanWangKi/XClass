@@ -5,9 +5,10 @@ from collections import defaultdict
 
 import numpy as np
 import torch
-from preprocessing_utils import load
 from tqdm import tqdm
-from utils import CLUSTER_FOLDER_PATH, MODELS, tensor_to_numpy
+
+from preprocessing_utils import load
+from utils import INTERMEDIATE_DATA_FOLDER_PATH, MODELS, tensor_to_numpy
 
 
 def prepare_sentence(tokenizer, text):
@@ -107,7 +108,7 @@ def main(args):
     dataset = load(args.dataset_name)
     print("Finish reading data")
 
-    data_folder = os.path.join(CLUSTER_FOLDER_PATH, args.dataset_name)
+    data_folder = os.path.join(INTERMEDIATE_DATA_FOLDER_PATH, args.dataset_name)
     if args.lm_type == 'bbu':
         dataset["class_names"] = [x.lower() for x in dataset["class_names"]]
 

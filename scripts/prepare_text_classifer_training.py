@@ -7,9 +7,10 @@ import pickle
 from shutil import copyfile
 
 import numpy as np
+
 from preprocessing_utils import load_clean_text
-from utils import (CLUSTER_FOLDER_PATH, DATA_FOLDER_PATH, evaluate_predictions,
-                   most_common)
+from utils import (DATA_FOLDER_PATH, INTERMEDIATE_DATA_FOLDER_PATH,
+                   evaluate_predictions, most_common)
 
 
 def write_to_dir(text, labels, dataset_name, suffix_name):
@@ -33,7 +34,7 @@ def write_to_dir(text, labels, dataset_name, suffix_name):
 
 
 def main(dataset_name, suffix, confidence_threshold):
-    data_dir = os.path.join(CLUSTER_FOLDER_PATH, dataset_name)
+    data_dir = os.path.join(INTERMEDIATE_DATA_FOLDER_PATH, dataset_name)
 
     cleaned_text = load_clean_text(os.path.join(DATA_FOLDER_PATH, dataset_name))
 
@@ -65,7 +66,8 @@ def main(dataset_name, suffix, confidence_threshold):
     evaluate_predictions(gold_classes, classes)
     ###
     write_to_dir(text, classes, dataset_name, f"{suffix}.{confidence_threshold}")
-
+    # json.dump(selected, open("m_sel.json", "w"))
+    # json.dump(documents_to_class.tolist(), open("m_pre.json", "w"))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

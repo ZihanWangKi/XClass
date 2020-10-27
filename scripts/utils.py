@@ -8,10 +8,10 @@ linewidth = 200
 np.set_printoptions(linewidth=linewidth)
 np.set_printoptions(precision=3, suppress=True)
 
-from sklearn.metrics import confusion_matrix, f1_score
-from scipy.spatial.distance import cdist
 from collections import Counter
 
+from scipy.spatial.distance import cdist
+from sklearn.metrics import confusion_matrix, f1_score
 from transformers import BertModel, BertTokenizer
 
 MODELS = {
@@ -21,7 +21,7 @@ MODELS = {
 
 # all paths can be either absolute or relative to this utils file
 DATA_FOLDER_PATH = os.path.join('..', 'data', 'datasets')
-CLUSTER_FOLDER_PATH = os.path.join('..', 'data', 'intermediate_data')
+INTERMEDIATE_DATA_FOLDER_PATH = os.path.join('..', 'data', 'intermediate_data')
 # this is also defined in run_train_text_classifier.sh, make sure to change both when changing.
 FINETUNE_MODEL_PATH = os.path.join('..', 'models')
 

@@ -1,6 +1,12 @@
 *__pycache__/
 scripts/runs/
 data/intermediate_data/*
-data/datasets/*.zip
-data/datasets/*/*.txt
+data/datasets/*
+!data/datasets/AGNews/README.md
+!data/datasets/20News/README.md
+!data/datasets/NYT-Small/README.md
+!data/datasets/NYT-Topics/README.md
+!data/datasets/NYT-Locations/README.md
+!data/datasets/Yelp/README.md
+!data/datasets/DBpedia/README.md
 models/*

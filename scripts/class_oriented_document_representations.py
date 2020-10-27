@@ -196,47 +196,8 @@ def main(args):
             cls_repr[cls] = average_with_harmonic_series(class_words_representations[cls])
         if len(finished_class) == len(class_names):
             break
+            
     class_representations = np.array(cls_repr)
-
-    # class_representations = []
-    # all_class_words = []
-    # for cls in range(len(class_names)):
-    #     class_words = [class_names[cls]]
-    #     class_words_representations = [static_word_representations[word_to_index[class_names[cls]]]]
-    #     masked_words = set()
-    #     masked_words.add(class_names[cls])
-    #     class_representation = average_with_harmonic_series(class_words_representations)
-    #     # we run for one more iteration, since after the iterations we remove the last word (the last word will
-    #     # either be the T + 1'th word, or the word that brought inconsistency)
-    #     for t in range(1, args.T + 1):
-    #         cosine_similarities = cosine_similarity_embeddings(static_word_representations,
-    #                                                            [class_representation]).squeeze()
-    #         highest_similarity = -1.0
-    #         highest_similarity_word_index = -1
-    #         lowest_masked_words_similarity = 1.0
-    #         for i, word in enumerate(vocab_words):
-    #             if word not in masked_words:
-    #                 if cosine_similarities[i] > highest_similarity:
-    #                     highest_similarity = cosine_similarities[i]
-    #                     highest_similarity_word_index = i
-    #             else:
-    #                 lowest_masked_words_similarity = min(lowest_masked_words_similarity, cosine_similarities[i])
-    #         # the topmost t words are no longer the t words in class_words
-    #         if lowest_masked_words_similarity < highest_similarity:
-    #             break
-    #         class_words.append(vocab_words[highest_similarity_word_index])
-    #         class_words_representations.append(static_word_representations[highest_similarity_word_index])
-    #         masked_words.add(vocab_words[highest_similarity_word_index])
-    #         class_representation = average_with_harmonic_series(class_words_representations)
-    #     class_words = class_words[: -1]
-    #     class_words_representations = class_words_representations[: -1]
-    #     print(len(class_words), len(class_words_representations))
-    #     class_representation = average_with_harmonic_series(class_words_representations)
-    #     class_representations.append(class_representation)
-    #     print(class_words)
-    #     all_class_words.append(class_words)
-
-    class_representations = np.array(class_representations)
     model_class, tokenizer_class, pretrained_weights = MODELS[args.lm_type]
     model = model_class.from_pretrained(pretrained_weights, output_hidden_states=True)
     model.eval()

@@ -98,9 +98,6 @@ def estimate_static(vocab, vocab_min_occurrence):
         static_word_representation.append(np.average(repr_list, axis=0))
     static_word_representation = np.array(static_word_representation)
     print(f"Saved {len(static_word_representation)}/{len(vocab)} words.")
-    print("Top occur words")
-    top_words = sorted(list(zip(vocab_words, vocab_occurrence)), key=lambda x: x[1], reverse=True)
-    print(top_words[:10])
     return static_word_representation, vocab_words, vocab_occurrence
 
 

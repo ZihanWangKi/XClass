@@ -1,6 +1,7 @@
 # X-Class
 <h5 align="center">XClass: Text Classification with Extremely Weak Supervision</h5>
 
+Our paper is available [here](https://arxiv.org/abs/2010.12794). 
 ## Motivation
 
 We propose the task: Text Classification with Extremely Weak Supervision, which is to classify documents

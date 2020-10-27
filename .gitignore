@@ -1,4 +1,6 @@
 *__pycache__/
 scripts/runs/
-data/*
+data/intermediate_data/*
+data/datasets/*.zip
+data/datasets/*/*.txt
 models/*

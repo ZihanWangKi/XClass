@@ -4,7 +4,6 @@
 ## Motivation
 
 We propose the task: Text Classification with Extremely Weak Supervision, which is to classify documents
-<<<<<<< Updated upstream
 to classes, with the plain class name as the only guidance.  
 Our method X-Class, breaks up this task into three modules
 - Class-oriented Document Representation

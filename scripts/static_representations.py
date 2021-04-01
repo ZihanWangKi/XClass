@@ -124,14 +124,41 @@ def main(args):
     model.cuda()
 
     tokenization_info = []
-    word_vocab = {}
+    import re
+    from collections import Counter
+    counts = Counter()
+    import string
+
+    for text in tqdm(data):
+        tokenized_text, tokenized_to_id_indicies, tokenids_chunks = prepare_sentence(tokenizer, text)
+        counts.update(word.translate(str.maketrans('','',string.punctuation)) for word in tokenized_text)
+        
+    del counts['']
+    updated_counts = {k: c for k, c in counts.items() if c >= args.vocab_min_occurrence}
+    word_rep = {}
+    word_count = {}
+
     for text in tqdm(data):
         tokenized_text, tokenized_to_id_indicies, tokenids_chunks = prepare_sentence(tokenizer, text)
         tokenization_info.append((tokenized_text, tokenized_to_id_indicies, tokenids_chunks))
         contextualized_word_representations = handle_sentence(model, args.layer, tokenized_text,
-                                                              tokenized_to_id_indicies, tokenids_chunks)
-
-        collect_vocab(tokenized_text, contextualized_word_representations, word_vocab)
+                                         tokenized_to_id_indicies, tokenids_chunks)
+        for i in range(len(tokenized_text)):
+          word = tokenized_text[i]
+          if word in updated_counts.keys():
+            if word not in word_rep:
+              word_rep[word] = 0
+              word_count[word] = 0
+            word_rep[word] += contextualized_word_representations[i]
+            word_count[word] += 1
+        
+    word_avg = {}
+    for k,v in word_rep.items():
+      word_avg[k] = word_rep[k]/word_count[k]
+    
+    vocab_words = list(word_avg.keys())
+    static_word_representations = list(word_avg.values())
+    vocab_occurrence = list(word_count.values()) 
 
     with open(os.path.join(data_folder, f"tokenization_lm-{args.lm_type}-{args.layer}.pk"), "wb") as f:
         pk.dump({
@@ -139,8 +166,6 @@ def main(args):
         }, f, protocol=4)
 
     with open(os.path.join(data_folder, f"static_repr_lm-{args.lm_type}-{args.layer}.pk"), "wb") as f:
-        static_word_representations, vocab_words, vocab_occurrence = estimate_static(word_vocab,
-                                                                                     args.vocab_min_occurrence)
         pk.dump({
             "static_word_representations": static_word_representations,
             "vocab_words": vocab_words,

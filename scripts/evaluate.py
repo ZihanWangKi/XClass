@@ -11,7 +11,7 @@ from utils import (DATA_FOLDER_PATH, FINETUNE_MODEL_PATH,
                    evaluate_predictions)
 
 
-def evaluate(dataset, stage, suffix=None):
+def evaluate(dataset, stage, suffix=None, output_to_console=True):
     data_dir = os.path.join(DATA_FOLDER_PATH, dataset)
     gold_labels = load_labels(data_dir)
     classes = load_classnames(data_dir)
@@ -22,16 +22,16 @@ def evaluate(dataset, stage, suffix=None):
             class_representations = dictionary["class_representations"]
             repr_prediction = np.argmax(cosine_similarity_embeddings(document_representations, class_representations),
                                         axis=1)
-            evaluate_predictions(gold_labels, repr_prediction)
+            return evaluate_predictions(gold_labels, repr_prediction, output_to_console=output_to_console)
     elif stage == "Align":
         with open(os.path.join(INTERMEDIATE_DATA_FOLDER_PATH, dataset, f"data.{suffix}.pk"), "rb") as f:
             dictionary = pickle.load(f)
             documents_to_class = dictionary["documents_to_class"]
-            evaluate_predictions(gold_labels, documents_to_class)
+            return evaluate_predictions(gold_labels, documents_to_class, output_to_console=output_to_console)
     else:
-        with open(os.path.join(FINETUNE_MODEL_PATH, suffix, "eval_labels.json"), "r") as f:
+        with open(os.path.join(FINETUNE_MODEL_PATH, f"bert-base-uncased_{suffix}", "eval_labels.json"), "r") as f:
             pred_labels = json.load(f)
-            evaluate_predictions(gold_labels, pred_labels)
+            return evaluate_predictions(gold_labels, pred_labels, output_to_console=output_to_console)
 
 
 if __name__ == '__main__':

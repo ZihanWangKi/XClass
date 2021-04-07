@@ -73,7 +73,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset_name", default="agnews")
     parser.add_argument("--suffix", type=str, default="pca64.clusgmm.bbu-12.mixture-100.42")
-    parser.add_argument("--confidence_threshold", default=0.5)
+    parser.add_argument("--confidence_threshold", type=float, default=0.5)
     args = parser.parse_args()
     print(vars(args))
     main(args.dataset_name, args.suffix, args.confidence_threshold)

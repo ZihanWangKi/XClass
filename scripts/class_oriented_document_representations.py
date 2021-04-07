@@ -14,6 +14,8 @@ from utils import (INTERMEDIATE_DATA_FOLDER_PATH, MODELS,
                    cosine_similarity_embedding, cosine_similarity_embeddings,
                    evaluate_predictions, tensor_to_numpy)
 
+from get_oov_classname_representation import InitialClassRepresentationObtainer
+
 
 def probability_confidence(prob):
     return max(softmax(prob))
@@ -95,9 +97,9 @@ def weight_sentence_with_attention(vocab, tokenized_text, contextualized_word_re
     elif attention_mechanism == "relation":
         weights = weights_from_ranking(relation_ranking)
     elif attention_mechanism == "significance_static":
-        weights = weights_from_ranking(relation_ranking)
+        weights = weights_from_ranking(significance_ranking_static)
     elif attention_mechanism == "relation_static":
-        weights = weights_from_ranking(relation_ranking)
+        weights = weights_from_ranking(relation_ranking_static)
     elif attention_mechanism == "mixture":
         weights = weights_from_ranking((significance_ranking,
                                         relation_ranking,
@@ -142,6 +144,13 @@ def main(args):
     print("Finish reading data")
 
     print(class_names)
+    if args.classname_oov:
+        embedder = InitialClassRepresentationObtainer(args.lm_type)
+        representations = [embedder.get_representation_for_classname(class_name) for class_name in class_names]
+        class_names = [f"OOV_{class_name}" for class_name in class_names]
+        static_word_representations = np.concatenate((static_word_representations, representations), axis=0)
+        vocab_words.extend(class_names)
+        word_to_index = {v: k for k, v in enumerate(vocab_words)}
 
     finished_class = set()
     masked_words = set(class_names)
@@ -188,7 +197,6 @@ def main(args):
                 class_words[cls] = class_words[cls][:-1]
                 class_words_representations[cls] = class_words_representations[cls][:-1]
                 cls_repr[cls] = average_with_harmonic_series(class_words_representations[cls])
-                print(class_words[cls])
                 break
             class_words[cls].append(vocab_words[highest_similarity_word_index])
             class_words_representations[cls].append(static_word_representations[highest_similarity_word_index])
@@ -196,7 +204,8 @@ def main(args):
             cls_repr[cls] = average_with_harmonic_series(class_words_representations[cls])
         if len(finished_class) == len(class_names):
             break
-            
+    print(class_words)
+
     class_representations = np.array(cls_repr)
     model_class, tokenizer_class, pretrained_weights = MODELS[args.lm_type]
     model = model_class.from_pretrained(pretrained_weights, output_hidden_states=True)
@@ -231,6 +240,7 @@ if __name__ == '__main__':
     parser.add_argument("--layer", type=int, default=12)
     parser.add_argument("--T", type=int, default=100)
     parser.add_argument("--attention_mechanism", type=str, default="mixture")
+    parser.add_argument("--classname_oov", action="store_true", help="use a template to obtain the class representations")
 
     args = parser.parse_args()
     print(vars(args))

@@ -10,6 +10,10 @@ from tqdm import tqdm
 from preprocessing_utils import load
 from utils import INTERMEDIATE_DATA_FOLDER_PATH, MODELS, tensor_to_numpy
 
+import re
+from collections import Counter
+import string
+
 
 def prepare_sentence(tokenizer, text):
     # setting for BERT
@@ -124,41 +128,37 @@ def main(args):
     model.cuda()
 
     tokenization_info = []
-    import re
-    from collections import Counter
     counts = Counter()
-    import string
 
     for text in tqdm(data):
         tokenized_text, tokenized_to_id_indicies, tokenids_chunks = prepare_sentence(tokenizer, text)
-        counts.update(word.translate(str.maketrans('','',string.punctuation)) for word in tokenized_text)
-        
+        tokenization_info.append((tokenized_text, tokenized_to_id_indicies, tokenids_chunks))
+        counts.update(word.translate(str.maketrans('', '', string.punctuation)) for word in tokenized_text)
+
     del counts['']
     updated_counts = {k: c for k, c in counts.items() if c >= args.vocab_min_occurrence}
     word_rep = {}
     word_count = {}
 
-    for text in tqdm(data):
-        tokenized_text, tokenized_to_id_indicies, tokenids_chunks = prepare_sentence(tokenizer, text)
-        tokenization_info.append((tokenized_text, tokenized_to_id_indicies, tokenids_chunks))
+    for text, (tokenized_text, tokenized_to_id_indicies, tokenids_chunks) in tqdm(zip(data, tokenization_info)):
         contextualized_word_representations = handle_sentence(model, args.layer, tokenized_text,
-                                         tokenized_to_id_indicies, tokenids_chunks)
+                                                              tokenized_to_id_indicies, tokenids_chunks)
         for i in range(len(tokenized_text)):
-          word = tokenized_text[i]
-          if word in updated_counts.keys():
-            if word not in word_rep:
-              word_rep[word] = 0
-              word_count[word] = 0
-            word_rep[word] += contextualized_word_representations[i]
-            word_count[word] += 1
-        
+            word = tokenized_text[i]
+            if word in updated_counts.keys():
+                if word not in word_rep:
+                    word_rep[word] = 0
+                    word_count[word] = 0
+                word_rep[word] += contextualized_word_representations[i]
+                word_count[word] += 1
+
     word_avg = {}
-    for k,v in word_rep.items():
-      word_avg[k] = word_rep[k]/word_count[k]
-    
+    for k, v in word_rep.items():
+        word_avg[k] = word_rep[k] / word_count[k]
+
     vocab_words = list(word_avg.keys())
-    static_word_representations = list(word_avg.values())
-    vocab_occurrence = list(word_count.values()) 
+    static_word_representations = [word_avg[word] for word in vocab_words]
+    vocab_occurrence = [word_count[word] for word in vocab_words]
 
     with open(os.path.join(data_folder, f"tokenization_lm-{args.lm_type}-{args.layer}.pk"), "wb") as f:
         pk.dump({

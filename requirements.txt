@@ -2,6 +2,6 @@ numpy
 scipy
 tqdm
 scikit-learn
-sentencepiece=0.1.91
-transformers=3.0.2
+sentencepiece==0.1.91
+transformers==3.0.2
 tensorboardX

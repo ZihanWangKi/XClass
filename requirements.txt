@@ -3,5 +3,5 @@ scipy
 tqdm
 scikit-learn
 sentencepiece=0.1.91
-transformers
+transformers=3.0.2
 tensorboardX
